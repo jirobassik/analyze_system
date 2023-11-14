@@ -9,7 +9,7 @@ class Listener:
     __slots__ = ('model', 'rec', 'audio', 'stream')
 
     def __init__(self):
-        self.model = Model("../vosk-model-small-en-us-0.15")
+        self.model = Model("./vosk-model-small-en-us-0.15")
         self.rec = KaldiRecognizer(self.model, 16000)
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(

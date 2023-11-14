@@ -2,8 +2,12 @@
 ## About
 Analyze speech system, responds to voice
 ## Run
-execute main.py
-## Has the following commands:
+```python start_system.py```
+## Has the following cli commands:
+- add_command - Name command and file name data
+- add_file - Path to folder that been added
+- del_command  Name commands, replace space on _
+## Has the following voice commands:
 - commands
 - literature definition
 - known russian literature
