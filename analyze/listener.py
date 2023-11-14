@@ -4,11 +4,12 @@ from vosk import Model, KaldiRecognizer
 from analyze.commands import Commands
 from analyze.error import MatchError
 
+
 class Listener:
     __slots__ = ('model', 'rec', 'audio', 'stream')
 
     def __init__(self):
-        self.model = Model("./vosk-model-small-en-us-0.15")
+        self.model = Model("../vosk-model-small-en-us-0.15")
         self.rec = KaldiRecognizer(self.model, 16000)
         self.audio = pyaudio.PyAudio()
         self.stream = self.audio.open(
@@ -25,7 +26,7 @@ class Listener:
         while True:
             try:
                 self.listen()
-            except OSError:
+            except ValueError:
                 self.start_listen()
 
     def listen(self):
@@ -54,4 +55,3 @@ class Listener:
                 print('Command result: ', res_com)
             except MatchError as e:
                 print(e)
-

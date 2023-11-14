@@ -1,6 +1,7 @@
 from analyze.matcher import Matcher
 from analyze.normalize import Normalize
 from utils.file_usage import FileUsage
+from utils.json_commands import read_json
 from analyze.error import MatchError
 
 
@@ -9,14 +10,12 @@ class Commands:
         self.file_util = FileUsage('./compositions')
         self.data_file_util = FileUsage('./data_files')
         self.command = Normalize(command)()
-        self.commands = {'commands': self.list_commands,
-                         'literature definition': self.literature,
-                         'known russian literature': self.known_russian_literature,
-                         'known english literature': self.known_english_literature,
-                         'literature genre': self.literature_genres,
-                         'system list composition': self.list_composition} | \
-                        {f'print {file_name}': FileDataRead(file_name, self.data_file) for file_name in
-                         self.file_util.get_file_names()}
+        self.standart_commands = {'list': self.list_commands,
+                                  'system list composition': self.list_composition} | \
+                                 {f'print {file_name}': MethExecute(file_name, self.data_file) for file_name in
+                                  self.file_util.get_file_names()}
+        self.commands = self.standart_commands | {name_com: MethExecute(file_data, self.read_data_file)
+                                                  for name_com, file_data in read_json().items()}
 
     def found_command(self):
         for name_com, com in self.commands.items():
@@ -30,27 +29,18 @@ class Commands:
             commands += f"Command name: {name_com}\n"
         return commands
 
-    def literature(self):
-        return self.data_file_util.read_file('literature_def')
-
-    def known_russian_literature(self):
-        return self.data_file_util.read_file('known_rus_lit')
-
-    def known_english_literature(self):
-        return self.data_file_util.read_file('known_eng_lit')
-
-    def literature_genres(self):
-        return self.data_file_util.read_file('literature_gen')
-
     def list_composition(self):
         file_names = self.file_util.get_file_names()
         return ', '.join(file_names)
+
+    def read_data_file(self, file_name):
+        return self.data_file_util.read_file(file_name)
 
     def data_file(self, file_name):
         return self.file_util.read_file(file_name)
 
 
-class FileDataRead:
+class MethExecute:
     def __init__(self, file_name: str, read_meth):
         self.read_meth = read_meth
         self.file_name = file_name
