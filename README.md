@@ -1,4 +1,6 @@
 # Analyze system
+## About
+Analyze speech system, responds to voice
 ## Run
 execute main.py
 ## Has the following commands:
